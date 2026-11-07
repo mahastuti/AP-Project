@@ -1,21 +1,7 @@
-# nextjs-app
+# aero landing page
 
-next.js (app router) + typescript, frontend + api dalam satu project. contoh: todo app.
-
-## struktur
-
-```
-app/
-├── layout.tsx
-├── page.tsx             # ui todo (client component)
-├── globals.css
-└── api/
-    ├── health/route.ts
-    └── todos/
-        ├── route.ts         # GET, POST
-        └── [id]/route.ts    # PATCH, DELETE
-lib/store.ts                 # data in-memory + tipe Todo
-```
+next.js 15 (app router) + typescript + tailwind css v4 + gsap + lucide.
+tampilan minimalis putih dan soft blue, terinspirasi landing page saas premium.
 
 ## jalanin
 
@@ -33,14 +19,33 @@ npm run build
 npm start
 ```
 
-## api
+## struktur
 
-| method | endpoint | keterangan |
-|--------|----------|------------|
-| GET | /api/health | cek server |
-| GET | /api/todos | list todo |
-| POST | /api/todos | tambah `{ "title": "..." }` |
-| PATCH | /api/todos/:id | toggle selesai |
-| DELETE | /api/todos/:id | hapus |
+```
+app/
+├── layout.tsx        # font geist, metadata, class "js" untuk reveal animation
+├── page.tsx          # susunan section
+├── globals.css       # tailwind, palette (@theme), keyframes, reduced-motion
+├── icon.svg          # favicon
+└── api/              # api todo bawaan (health, todos), tidak dipakai ui
+components/
+├── Navbar.tsx        # floating nav + menu mobile
+├── Hero.tsx          # gradient atmosferik + mockup dashboard
+├── Metrics.tsx
+├── Features.tsx      # bento cards
+├── Workflow.tsx
+├── Insights.tsx
+├── Testimonial.tsx
+├── Cta.tsx
+├── Footer.tsx
+├── mockups.tsx       # dashboard mockup, chart, avatar, dll (pure html/svg)
+├── Motion.tsx        # semua animasi gsap (reveal + parallax)
+└── buttons.ts        # style tombol bersama
+```
 
-data disimpan in-memory, hilang kalau server restart (dan tidak cocok untuk serverless seperti vercel). ganti dengan database kalau butuh persistensi.
+## catatan
+
+- palette ada di `app/globals.css` bagian `@theme`. `azure-ink` (#1b6fa8) dipakai untuk teks biru kecil supaya kontrasnya lolos aa.
+- animasi dikontrol lewat atribut: `data-reveal`, `data-reveal-delay`, `data-parallax`.
+- semua animasi mati otomatis kalau `prefers-reduced-motion` aktif.
+- semua teks (brand "aero", angka, testimonial) adalah placeholder, ganti sesuai produk.
