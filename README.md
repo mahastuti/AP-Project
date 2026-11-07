@@ -1,7 +1,7 @@
-# aero landing page
+# birdstrike juanda dashboard (versi tampilan)
 
-next.js 15 (app router) + typescript + tailwind css v4 + gsap + lucide.
-tampilan minimalis putih dan soft blue, terinspirasi landing page saas premium.
+salinan tampilan dari `mahastuti/qwb521jf9900`, dibuat ulang di project ini.
+next.js 15 (app router) + typescript + tailwind css v4 + shadcn/ui + lucide.
 
 ## jalanin
 
@@ -12,6 +12,8 @@ npm run dev
 
 buka http://localhost:3000
 
+login (gate sisi klien): lihat `src/components/auth.tsx`.
+
 ## production
 
 ```bash
@@ -19,33 +21,31 @@ npm run build
 npm start
 ```
 
-## struktur
+## yang ikut dicopy
 
-```
-app/
-├── layout.tsx        # font geist, metadata, class "js" untuk reveal animation
-├── page.tsx          # susunan section
-├── globals.css       # tailwind, palette (@theme), keyframes, reduced-motion
-├── icon.svg          # favicon
-└── api/              # api todo bawaan (health, todos), tidak dipakai ui
-components/
-├── Navbar.tsx        # floating nav + menu mobile
-├── Hero.tsx          # gradient atmosferik + mockup dashboard
-├── Metrics.tsx
-├── Features.tsx      # bento cards
-├── Workflow.tsx
-├── Insights.tsx
-├── Testimonial.tsx
-├── Cta.tsx
-├── Footer.tsx
-├── mockups.tsx       # dashboard mockup, chart, avatar, dll (pure html/svg)
-├── Motion.tsx        # semua animasi gsap (reveal + parallax)
-└── buttons.ts        # style tombol bersama
-```
+- semua halaman: dashboard (dashboard, predict, map), data, tentang, 3 halaman input, 404
+- navbar, footer, form, tabel data, komponen ui, style (`src/app/globals.css`)
+- aset: logo, foto, ilustrasi, dan 8 gambar peta
 
-## catatan
+## yang berbeda dari aslinya
 
-- palette ada di `app/globals.css` bagian `@theme`. `azure-ink` (#1b6fa8) dipakai untuk teks biru kecil supaya kontrasnya lolos aa.
-- animasi dikontrol lewat atribut: `data-reveal`, `data-reveal-delay`, `data-parallax`.
-- semua animasi mati otomatis kalau `prefers-reduced-motion` aktif.
-- semua teks (brand "aero", angka, testimonial) adalah placeholder, ganti sesuai produk.
+- **tanpa database.** prisma, python (`backend/`), dan folder `src/scripts` tidak dicopy.
+  semua `/api/*` diganti versi contoh yang menyimpan data di memori (`src/lib/mock-db.ts`),
+  jadi data hilang saat server restart dan isinya fiktif (dibuat otomatis).
+- **import traffic flight tidak memproses file** (selalu 0 baris).
+- **prediksi bukan model asli.** `/api/modeling/predict` hanya rumus sederhana dari jumlah burung.
+  label model di ui sengaja bertuliskan "contoh-model (bukan model asli)". jangan dipakai untuk keputusan keselamatan.
+- **gambar peta dikompres** dari png 14548x7197 (~17 MB) ke webp 5000 px (~0,8 MB).
+- **font poppins** lewat `@fontsource/poppins` (self-hosted), bukan `next/font/google`.
+- eslint belum dipasang.
+
+## memasang backend asli
+
+1. salin `prisma/` dan `src/lib/prisma.ts` dari repo asli, pasang `@prisma/client` dan `prisma`.
+2. ganti route di `src/app/api/` dengan route asli dari repo asli.
+3. hapus `src/lib/mock-db.ts`.
+
+## catatan keamanan
+
+login di `src/components/auth.tsx` hanya pembatas tampilan di browser (username/password tertulis di kode,
+status login di `localStorage`). siapa pun bisa melewatinya. jangan jadikan itu satu-satunya proteksi data.
