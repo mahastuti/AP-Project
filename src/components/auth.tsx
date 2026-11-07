@@ -40,7 +40,19 @@ export default function AuthWrapper({ children }: AuthWrapperProps) {
     }
   };
 
-  if (isLoading) return null;
+  // saat status login dicek (dan di html dari server), tampilkan kerangka ringan
+  // supaya layar tidak kosong sebelum javascript selesai dimuat
+  if (isLoading) {
+    return (
+      <div role="status" aria-label="Memuat" className="min-h-screen flex-1 animate-pulse p-4 sm:p-8">
+        <div className="mx-auto max-w-6xl space-y-4">
+          <div className="mx-auto h-8 w-40 rounded bg-white/80" />
+          <div className="h-64 rounded-lg border-2 border-gray-200 bg-white/80" />
+          <div className="h-40 rounded-lg border-2 border-gray-200 bg-white/80" />
+        </div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return (

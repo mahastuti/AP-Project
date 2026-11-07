@@ -51,7 +51,7 @@ export default function MapControls() {
   );
 
   return (
-    <div className="p-8 space-y-4 mb-4">
+    <div className="space-y-4 p-4 sm:p-8">
       <div className="flex gap-3">
         <Pill label="Heat Plot" active={mode === 'heatmap'} onClick={() => setMode(m => (m === 'heatmap' ? null : 'heatmap'))} />
         <Pill label="Bubble Plot" active={mode === 'bubble'} onClick={() => setMode(m => (m === 'bubble' ? null : 'bubble'))} />
@@ -87,17 +87,22 @@ export default function MapControls() {
         </div>
       </div>
 
-      <div className="relative h-96 bg-gray-100 border-2 border-gray-300 rounded-lg overflow-auto">
-        <div className="w-full h-full flex items-center justify-center p-2">
+      {/* rasio kotak mengikuti rasio gambar, jadi seluruh peta terlihat di zoom 100% */}
+      <div
+        className="relative w-full overflow-auto rounded-lg border-2 border-gray-300 bg-gray-100"
+        style={{ aspectRatio: `${src.width} / ${src.height}`, maxHeight: '75vh', minHeight: 200 }}
+      >
+        {/* m-auto (bukan justify-center) supaya sisi kiri tetap bisa di-scroll saat zoom > 100% */}
+        <div className="flex h-full w-full">
           <Image
             src={src}
-            alt="Peta"
+            alt="Peta area bandara"
             width={src.width}
             height={src.height}
-            className="select-none"
+            className="m-auto max-w-none shrink-0 select-none"
             style={{ width: `${(zoom * 100).toFixed(0)}%`, height: 'auto' }}
-            sizes="100vw"
-            priority
+            sizes={`(min-width: 1280px) ${Math.round(zoom * 1100)}px, ${Math.round(zoom * 100)}vw`}
+            quality={80}
             placeholder="blur"
           />
         </div>

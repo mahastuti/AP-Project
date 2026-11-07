@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#EEF5FF]">
+    <div className="flex flex-1 items-center justify-center py-16">
       <div className="text-center">
         <h1 className="text-4xl font-bold text-gray-800 mb-4">404</h1>
         <p className="text-gray-600 mb-4">Halaman tidak ditemukan</p>

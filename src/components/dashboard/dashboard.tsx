@@ -3,123 +3,136 @@
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { BarChart3, LayoutDashboard, Map } from 'lucide-react';
-import DashboardInputData from '@/components/dashboard/dashboard-input-data';
-import PredictSection from '@/components/dashboard/predict-section';
 
-const MapControls = dynamic(() => import('./map-controls'), { ssr: false });
+// bagian berat dimuat hanya saat dibutuhkan, supaya halaman pertama lebih ringan
+const DashboardInputData = dynamic(
+  () => import('@/components/dashboard/dashboard-input-data'),
+  { loading: () => <PanelSkeleton label="Memuat form input…" height="h-[480px]" /> },
+);
+const PredictSection = dynamic(
+  () => import('@/components/dashboard/predict-section'),
+  { loading: () => <PanelSkeleton label="Memuat prediksi…" height="h-[480px]" /> },
+);
+const MapControls = dynamic(() => import('./map-controls'), {
+  ssr: false,
+  loading: () => <PanelSkeleton label="Memuat peta…" height="h-[520px]" />,
+});
+
+type TabId = 'dashboard' | 'predict' | 'map';
+
+const tabs = [
+  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { id: 'predict', label: 'Predict', icon: BarChart3 },
+  { id: 'map', label: 'Map', icon: Map },
+] as const;
+
+function PanelSkeleton({ label, height }: { label: string; height: string }) {
+  return (
+    <div
+      role="status"
+      className={`${height} grid w-full place-items-center rounded-lg border-2 border-gray-300 bg-white text-sm text-gray-500`}
+    >
+      {label}
+    </div>
+  );
+}
+
+function CardHeader({ title }: { title: string }) {
+  return (
+    <div className="rounded-t-lg border-b border-gray-300 bg-[#40A3DC] p-3">
+      <h2 className="text-center text-xl font-medium text-white sm:text-2xl">{title}</h2>
+    </div>
+  );
+}
 
 export default function Dashboard() {
-  const [selectedSidebarOption, setSelectedSidebarOption] = useState('dashboard');
-
+  const [selected, setSelected] = useState<TabId>('dashboard');
 
   return (
-    <div className="min-h-screen flex bg-[#EEF5FF]">
-
-      {/* Sidebar */}
-      <div className="w-64 bg-white p-6 border-r border-gray-300">
-        <div className="space-y-4">
-
-          <button
-            onClick={() => setSelectedSidebarOption('dashboard')}
-            className={`w-full text-left p-3 rounded-lg border-2 transition-colors flex items-center gap-3 ${selectedSidebarOption === 'dashboard'
-                ? "bg-gradient-to-r from-[#72BB34] to-[#40A3DC] border border-gray-300 text-white hover:opacity-80"
-                : 'bg-[#83C8EF] font-medium text-white'
-              }`}
-          >
-            <LayoutDashboard className="w-5 h-5" />
-            Dashboard
-          </button>
-
-          <button
-            onClick={() => setSelectedSidebarOption('predict')}
-            className={`w-full text-left p-3 rounded-lg border-2 transition-colors flex items-center gap-3 ${selectedSidebarOption === 'predict'
-                ? "bg-gradient-to-r from-[#72BB34] to-[#40A3DC] border border-gray-300 text-white hover:opacity-80"
-                : 'bg-[#83C8EF] font-medium text-white'
-              }`}
-          >
-            <BarChart3 className="w-5 h-5" />
-            Predict
-          </button>
-
-          <button
-            onClick={() => setSelectedSidebarOption('map')}
-            className={`w-full text-left p-3 rounded-lg border-2 transition-colors flex items-center gap-3 ${selectedSidebarOption === 'map'
-                ? "bg-gradient-to-r from-[#72BB34] to-[#40A3DC] border border-gray-300 text-white hover:opacity-80"
-                : 'bg-[#83C8EF] font-medium text-white'
-              }`}
-          >
-            <Map className="w-5 h-5" />
-            Map
-          </button>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-1 p-6">
-        
-        {selectedSidebarOption === 'dashboard' && (
-          <div className="space-y-6">
-
-            {/* Dashboard Looker Section */}
-            <div className="bg-white border-2 border-gray-300 rounded-lg">
-              <div className="p-3 bg-[#40A3DC] border-b border-gray-300 rounded-t-lg">
-                <h2 className="text-2xl font-medium text-center text-white">DASHBOARD</h2>
-              </div>
-              <div className="p-2 flex justify-center ">
-                <iframe
-                  title="Looker Studio Dashboard"
-                  src="https://lookerstudio.google.com/embed/reporting/527a0a62-796f-4889-85e2-14c548a217b6/page/bpxSF"
-                  className="w-full max-w-4xl h-[750px] border-0 rounded "
-                  loading="lazy"
-                  allowFullScreen
-                />
-              </div>
-            </div>
-
-            {/* Input Data Section */}
-            <DashboardInputData />
-
-            {/* Logout Button */}
-            <div className="mt-8 mb-17 flex justify-center">
+    <div className="flex flex-1 flex-col lg:flex-row">
+      {/* menu: tab horizontal di layar kecil, sidebar di layar besar */}
+      <aside className="border-b border-gray-300 bg-white p-3 lg:w-60 lg:shrink-0 lg:border-b-0 lg:border-r lg:p-5">
+        <nav
+          aria-label="Menu dashboard"
+          className="grid grid-cols-3 gap-2 lg:sticky lg:top-24 lg:grid-cols-1 lg:gap-3"
+        >
+          {tabs.map(({ id, label, icon: Icon }) => {
+            const active = selected === id;
+            return (
               <button
-                onClick={() => {
-                  try {
-                    localStorage.removeItem('isAuthenticated');
-                    window.location.reload();
-                  } catch (error) {
-                    console.warn('localStorage not available:', error);
-                  }
-                }}
-                className="w-full relative bg-red-500 text-white px-6 py-3
-                rounded-lg font-medium transition-all duration-300 ease-in-out shadow-sm
-                hover:scale-100 hover:shadow-xl before:absolute before:inset-0
-                before:bg-white/20 before:translate-x-[-100%] hover:before:translate-x-[100%]
-                before:transition-transform before:duration-500"
+                key={id}
+                type="button"
+                onClick={() => setSelected(id)}
+                aria-pressed={active}
+                className={`flex items-center justify-center gap-2 rounded-lg border-2 px-2 py-2.5 text-sm font-medium text-white transition-colors sm:px-3 lg:justify-start lg:px-4 lg:py-3 lg:text-base ${
+                  active
+                    ? 'border-gray-300 bg-linear-to-r from-[#72BB34] to-[#40A3DC] hover:opacity-90'
+                    : 'border-transparent bg-[#83C8EF] hover:bg-[#6fbbe6]'
+                }`}
               >
-                Logout
+                <Icon className="size-5 shrink-0" />
+                {label}
               </button>
-            </div>
-          </div>
-        )}
+            );
+          })}
+        </nav>
+      </aside>
 
-        {selectedSidebarOption === 'predict' && (
-          <PredictSection />
-        )}
-
-        {selectedSidebarOption === 'map' && (
-          <div className="space-y-6">
-            <div className="bg-white border-2 border-gray-300 rounded-lg">
-              <div className="p-3 bg-[#40A3DC] border-b border-gray-300 rounded-t-lg">
-                <h2 className="text-2xl font-medium text-center text-white">MAP</h2>
+      {/* konten */}
+      <div className="min-w-0 flex-1 p-4 sm:p-6">
+        <div className="mx-auto w-full max-w-6xl space-y-6">
+          {selected === 'dashboard' && (
+            <>
+              <div className="rounded-lg border-2 border-gray-300 bg-white">
+                <CardHeader title="DASHBOARD" />
+                <div className="p-2">
+                  {/* tinggi dipatok supaya halaman tidak bergeser saat iframe selesai dimuat */}
+                  <div className="relative mx-auto h-[520px] w-full max-w-5xl overflow-hidden rounded bg-gray-100 sm:h-[640px] lg:h-[750px]">
+                    <span className="absolute inset-0 grid place-items-center text-sm text-gray-500">
+                      Memuat dashboard…
+                    </span>
+                    <iframe
+                      title="Looker Studio Dashboard"
+                      src="https://lookerstudio.google.com/embed/reporting/527a0a62-796f-4889-85e2-14c548a217b6/page/bpxSF"
+                      className="relative h-full w-full border-0"
+                      loading="lazy"
+                      allowFullScreen
+                    />
+                  </div>
+                </div>
               </div>
+
+              <DashboardInputData />
+
+              <div className="flex justify-center pb-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    try {
+                      localStorage.removeItem('isAuthenticated');
+                      window.location.reload();
+                    } catch (error) {
+                      console.warn('localStorage not available:', error);
+                    }
+                  }}
+                  className="relative w-full overflow-hidden rounded-lg bg-red-500 px-6 py-3 font-medium text-white shadow-sm transition-all duration-300 ease-in-out before:absolute before:inset-0 before:-translate-x-full before:bg-white/20 before:transition-transform before:duration-500 hover:shadow-xl hover:before:translate-x-full"
+                >
+                  Logout
+                </button>
+              </div>
+            </>
+          )}
+
+          {selected === 'predict' && <PredictSection />}
+
+          {selected === 'map' && (
+            <div className="rounded-lg border-2 border-gray-300 bg-white">
+              <CardHeader title="MAP" />
               <MapControls />
             </div>
-          </div>
-        )}
-
-
+          )}
+        </div>
       </div>
-
     </div>
   );
 }

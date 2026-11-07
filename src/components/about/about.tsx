@@ -3,49 +3,58 @@
 import Image from "next/image";
 import { assets } from "@/assets/assets";
 
+const card = "rounded-lg border-2 border-gray-400 bg-white p-5 sm:p-8";
+const heading = "mb-5 text-center text-2xl font-medium text-black sm:text-3xl";
+
 export default function About() {
   return (
-    <div className="min-h-screen bg-[#EEF5FF] p-8">
-      <div className="max-w-4xl mx-auto space-y-8">
+    <div className="flex-1 px-4 py-8 sm:px-8">
+      <div className="mx-auto max-w-4xl space-y-8">
 
-        {/* Tentang Proyek Section */}
-        <div>
-          <h2 className="text-3xl font-medium text-center mb-5 text-black">Tentang Proyek</h2>
-          <div className="bg-white border-2 border-gray-400 rounded-lg p-8">
-            <div className="flex items-center gap-8">
-              {/* Photo and info */}
-              <div className="flex flex-col items-center flex-shrink-0">
-                <div className="w-64 h-64 bg-yellow-200 rounded-full flex items-center justify-center text-gray-700 font-medium">
-                  <Image src={assets.pakbagus.src} alt="Pak Bagus" width={256} height={256} className="w-full h-full object-cover rounded-full" />
-                </div>
+        {/* Tentang Proyek */}
+        <section>
+          <h2 className={heading}>Tentang Proyek</h2>
+          <div className={card}>
+            <div className="flex flex-col items-center gap-6 md:flex-row md:items-start md:gap-8">
+              <div className="size-40 shrink-0 overflow-hidden rounded-full bg-yellow-200 sm:size-52 md:size-64">
+                <Image
+                  src={assets.pakbagus}
+                  alt="Pak Bagus"
+                  width={256}
+                  height={256}
+                  sizes="(min-width: 768px) 256px, 208px"
+                  className="size-full object-cover"
+                />
               </div>
-              {/* Text area */}
-              <div className="flex-1 bg-white p-2 rounded">
-                <div className="text-black text-justify">
+
+              <div className="min-w-0 flex-1 text-black">
+                <p className="text-justify">
                   Proyek ini menggabungkan dashboard interaktif dan model prediksi <i>machine learning</i> agar terintegrasi secara <i>real-time </i>
-                  dengan data terbaru yang diinput. <br/><br/>
+                  dengan data terbaru yang diinput.
+                </p>
+                <p className="mt-4 text-justify">
                   Di bawah bimbingan dan arahan <b>Bapak Bagus Yuliono</b> sebagai Senior Manager Divisi Safety, proyek ini dikerjakan dengan
                   berkolaborasi dengan Departemen Statistika ITS oleh
                   <a href="https://www.linkedin.com/in/alifmuhmahrus/" target="_blank" rel="noopener noreferrer"> Mahrus Alif </a>
                   dan <a href="https://www.linkedin.com/in/mahastuti/" target="_blank" rel="noopener noreferrer">Nalini Mahastuti</a>.
+                </p>
 
-                </div>
-                <div className="flex gap-10 mt-5">
-                  <div className="flex-1 text-black text-justify">
-                    <h3 className="text-l font-medium mb-2">Tech Stack & Tools:</h3>
-                    <ul className="list-disc list-inside">
+                <div className="mt-5 grid gap-5 sm:grid-cols-2 sm:gap-10">
+                  <div>
+                    <h3 className="mb-2 font-medium">Tech Stack &amp; Tools:</h3>
+                    <ul className="list-inside list-disc">
                       <li>Next.js</li>
-                      <li>PostgreSQL & Prisma</li>
-                      <li>Supabase & TablePlus</li>
-                      <li>Python & Flask</li>
-                      <li>Github & Vercel</li>
+                      <li>PostgreSQL &amp; Prisma</li>
+                      <li>Supabase &amp; TablePlus</li>
+                      <li>Python &amp; Flask</li>
+                      <li>Github &amp; Vercel</li>
                       <li>Google Looker Studio</li>
                       <li>Figma</li>
                     </ul>
                   </div>
-                  <div className="flex-1 text-black text-left">
-                    <h3 className="text-l font-medium mb-2">Fitur Utama:</h3>
-                    <ul className="list-disc list-inside">
+                  <div>
+                    <h3 className="mb-2 font-medium">Fitur Utama:</h3>
+                    <ul className="list-inside list-disc">
                       <li>Input data terintegrasi</li>
                       <li>Dashboard real-time</li>
                       <li>Visualisasi interaktif</li>
@@ -56,27 +65,27 @@ export default function About() {
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* Saran dan Evaluasi + Versi Section */}
-        <div className="flex gap-6 mb-16">
-          <div className="flex-2 h-auto">
-            <h2 className="text-3xl font-medium text-center mb-5 text-black">Saran Pengembangan</h2>
-            <div className="text-black text-justify bg-white border-2 border-gray-400 rounded-lg p-8">
+        {/* Saran Pengembangan + Versi */}
+        <div className="grid gap-6 md:grid-cols-3">
+          <section className="md:col-span-2">
+            <h2 className={heading}>Saran Pengembangan</h2>
+            <div className={`${card} h-[calc(100%-3.25rem)] text-black`}>
               <p className="mb-3">Proyek ini masih berada pada tahap pengembangan awal. Kedepannya, diharapkan dapat terus dikembangkan, dengan evaluasi:</p>
-              <ul className="list-disc list-inside space-y-1 text-left">
+              <ul className="list-inside list-disc space-y-1">
                 <li>Data burung terbatas, sehingga model juga didasarkan pada burung2 itu </li>
                 <li>Data cuaca belum mendapat akses langsung dari BMKG Juanda, sehingga menggunakan data cuaca yang open-API </li>
               </ul>
             </div>
-          </div>
-          <div className="flex-1">
-            <h2 className="text-3xl font-medium text-center mb-5 text-black">Versi</h2>
-            <div className="text-gray-400 text-justify bg-white border-2 border-gray-400 rounded-lg p-8">
-              1.0.0 Rilis awal<br/>
+          </section>
+          <section>
+            <h2 className={heading}>Versi</h2>
+            <div className={`${card} h-[calc(100%-3.25rem)] text-gray-500`}>
+              1.0.0 Rilis awal<br />
               1.1.0 &nbsp;Integrasi Database
             </div>
-          </div>
+          </section>
         </div>
       </div>
     </div>

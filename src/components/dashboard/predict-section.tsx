@@ -194,7 +194,7 @@ export default function PredictSection() {
 
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 mb-19">
+    <div className="max-w-4xl mx-auto space-y-6">
       {/* Prediction Result Section */}
       <div className="bg-white border-2 border-gray-300 rounded-lg p-8">
         <h2 className="text-xl font-medium text-center mb-6">Peluang Burung dari Titik {formData.titik} Menyebabkan Bird Strike Sebesar</h2>
