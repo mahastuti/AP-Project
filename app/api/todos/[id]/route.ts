@@ -3,7 +3,9 @@ import { store } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
 
-export async function PATCH(_request, { params }) {
+type Context = { params: Promise<{ id: string }> };
+
+export async function PATCH(_request: Request, { params }: Context) {
   const { id } = await params;
   const todo = store.todos.find((t) => t.id === Number(id));
 
@@ -15,7 +17,7 @@ export async function PATCH(_request, { params }) {
   return NextResponse.json(todo);
 }
 
-export async function DELETE(_request, { params }) {
+export async function DELETE(_request: Request, { params }: Context) {
   const { id } = await params;
   const index = store.todos.findIndex((t) => t.id === Number(id));
 

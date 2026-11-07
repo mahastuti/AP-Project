@@ -1,18 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
+import type { Todo } from "@/lib/store";
 
 const API = "/api/todos";
 
 export default function Home() {
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useState<Todo[]>([]);
   const [title, setTitle] = useState("");
   const [error, setError] = useState("");
 
   async function load() {
     try {
       const res = await fetch(API);
-      setTodos(await res.json());
+      setTodos((await res.json()) as Todo[]);
       setError("");
     } catch {
       setError("gagal ambil data");
@@ -23,7 +24,7 @@ export default function Home() {
     load();
   }, []);
 
-  async function addTodo(e) {
+  async function addTodo(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!title.trim()) return;
     const res = await fetch(API, {
@@ -32,21 +33,21 @@ export default function Home() {
       body: JSON.stringify({ title }),
     });
     if (res.ok) {
-      const todo = await res.json();
+      const todo = (await res.json()) as Todo;
       setTodos((prev) => [...prev, todo]);
       setTitle("");
     }
   }
 
-  async function toggle(id) {
+  async function toggle(id: number) {
     const res = await fetch(`${API}/${id}`, { method: "PATCH" });
     if (res.ok) {
-      const updated = await res.json();
+      const updated = (await res.json()) as Todo;
       setTodos((prev) => prev.map((t) => (t.id === id ? updated : t)));
     }
   }
 
-  async function remove(id) {
+  async function remove(id: number) {
     const res = await fetch(`${API}/${id}`, { method: "DELETE" });
     if (res.ok) setTodos((prev) => prev.filter((t) => t.id !== id));
   }

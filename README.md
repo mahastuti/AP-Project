@@ -1,20 +1,20 @@
 # nextjs-app
 
-next.js (app router) fullstack, frontend + api dalam satu project. contoh: todo app.
+next.js (app router) + typescript, frontend + api dalam satu project. contoh: todo app.
 
 ## struktur
 
 ```
 app/
-├── layout.js
-├── page.js              # ui todo (client component)
+├── layout.tsx
+├── page.tsx             # ui todo (client component)
 ├── globals.css
 └── api/
-    ├── health/route.js
+    ├── health/route.ts
     └── todos/
-        ├── route.js         # GET, POST
-        └── [id]/route.js    # PATCH, DELETE
-lib/store.js                 # data in-memory
+        ├── route.ts         # GET, POST
+        └── [id]/route.ts    # PATCH, DELETE
+lib/store.ts                 # data in-memory + tipe Todo
 ```
 
 ## jalanin
